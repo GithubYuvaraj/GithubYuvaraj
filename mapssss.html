@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Location</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5qMV_dPrG_b8ahTZyjNTUNSln1o9hNaY&callback=initMap" async defer></script>
+    <style>
+        #map {
+            height: 750px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        let map, infoWindow, marker;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 10.3303, lng: 77.9512 }, 
+                zoom: 15, 
+            });
+            infoWindow = new google.maps.InfoWindow();
+            marker = new google.maps.Marker({
+                map: map,
+                title: "My Location",
+            });
+
+            // Function to update user's location
+            function updateLocation(position) {
+                const pos = {
+                   lat: 10.278122,
+                    lng: 77.935156,
+                };
+                marker.setPosition(pos); // Update marker position
+                infoWindow.setContent("Location found.");
+                infoWindow.open(map);
+                map.setCenter(pos);
+            }
+
+            // Try HTML5 geolocation to get the user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(updateLocation, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(
+                browserHasGeolocation
+                    ? "Error: The Geolocation service failed."
+                    : "Error: Your browser doesn't support geolocation."
+            );
+            infoWindow.open(map);
+        }
+    </script>
+</body>
+</html>
+
+
